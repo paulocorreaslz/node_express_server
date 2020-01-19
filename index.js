@@ -12,5 +12,19 @@ servidor.get('/', (requisicao, resposta) => {
     });
 })
 
+servidor.get('/user/:id', (requisicao, resposta) => {
+    
+    const { id } = requisicao.params;
+    
+    return resposta.json({ 
+        'data':{
+            'message': 'sucesso'
+        },
+        'error': {
+            'number': id}
+    });
+})
+
+
 servidor.listen(9000);
 
