@@ -23,10 +23,12 @@ var options = {
     }
   }
    
-  MongoClient.connect(databaseUrl, { useNewUrlParser: true })
+  MongoClient.connect(databaseUrl, { 
+    useNewUrlParser: true,
+    useUnifiedTopology: true })
   .then(client => {
     servidor.locals.db = client.db('dbshorter');
-    console.log("conectado ao ")
+    console.log("conectado ao mongo.")
   })
   .catch(() => console.error('Failed to connect to the database'));
 
