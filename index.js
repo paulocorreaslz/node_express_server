@@ -1,6 +1,8 @@
 const express = require('express')
 const servidor = express();
+const path = require('path');
 const swaggerUi = require('swagger-ui-express');
+
 var options = {
     explorer: true,
     swaggerOptions: {
@@ -19,17 +21,12 @@ var options = {
    
   servidor.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null, options));
 
-var knex = require('knex')({
-    client: 'mysql',
-    connection: {
-      host : '127.0.0.1',
-      user : 'dbuser',
-      password : 'dbpass',
-      database : 'dbdatabase'
-    }
+  servidor.get('/', (req, res) => {
+    const htmlPath = path.join(__dirname, 'public', 'index.html');
+    res.sendFile(htmlPath);
   });
 
-servidor.get('/', (requisicao, resposta) => {
+  servidor.get('/get', (requisicao, resposta) => {
     return resposta.json({ 
         'data':{
             'message': 'sucesso'
@@ -37,9 +34,9 @@ servidor.get('/', (requisicao, resposta) => {
         'error': {
             'number': 0}
     });
-})
+  })
 
-servidor.get('/user/:id', (requisicao, resposta) => {
+  servidor.get('/user/:id', (requisicao, resposta) => {
     
     const { id } = requisicao.params;
     
@@ -50,8 +47,7 @@ servidor.get('/user/:id', (requisicao, resposta) => {
         'error': {
             'number': id}
     });
-})
-
+  })
 
 servidor.listen(9000);
 
