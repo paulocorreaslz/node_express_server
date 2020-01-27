@@ -6,9 +6,15 @@
   "repository": "https://github.com/paulocorreaslz/node_express_server.git",
   "author": "Paulo Correa <pauloyaco@gmail.com>",
   "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  },
   "dependencies": {
     "express": "^4.17.1",
-    "knex": "^0.20.8",
-    "swagger-ui-express": "^4.1.3"
+    "body-parser": "^1.18.3",
+    "dotenv": "^6.2.0",
+    "swagger-ui-express": "^4.1.3",
+    "mongodb": "^3.1.10",
+    "nanoid": "^2.0.1"
   }
 }

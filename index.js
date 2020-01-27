@@ -1,7 +1,11 @@
 const express = require('express')
 const servidor = express();
-const path = require('path');
 const swaggerUi = require('swagger-ui-express');
+const bodyParser = require('body-parser');
+const dns = require('dns');
+const { MongoClient } = require('mongodb');
+
+const databaseUrl = "mongodb://localhost:27017";
 
 var options = {
     explorer: true,
@@ -19,14 +23,18 @@ var options = {
     }
   }
    
+  MongoClient.connect(databaseUrl, { useNewUrlParser: true })
+  .then(client => {
+    servidor.locals.db = client.db('dbshorter');
+    console.log("conectado ao ")
+  })
+  .catch(() => console.error('Failed to connect to the database'));
+
   servidor.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null, options));
 
-  servidor.get('/', (req, res) => {
-    const htmlPath = path.join(__dirname, 'public', 'index.html');
-    res.sendFile(htmlPath);
-  });
+  servidor.use(bodyParser.json());
 
-  servidor.get('/get', (requisicao, resposta) => {
+  servidor.get('/', (requisicao, resposta) => {
     return resposta.json({ 
         'data':{
             'message': 'sucesso'
@@ -35,6 +43,37 @@ var options = {
             'number': 0}
     });
   })
+
+  servidor.post('/new', (requisicao, resposta) => {
+    let originalUrl;
+    try {
+      originalUrl = new URL(requisicao.body.url);
+    } catch (err) {
+      return resposta.status(400).send({ error: 'invalid URL' });
+    }
+  
+    dns.lookup(originalUrl.hostname, (erro) => {
+      if (erro) {
+        return resposta.status(404).send({ error: 'Address not found' });
+      };
+    });
+  });
+
+  const shortenURL = (db, url) => {
+    const shortenedURLs = db.collection('shortenedURLs');
+    return shortenedURLs.findOneAndUpdate({ original_url: url },
+      {
+        $setOnInsert: {
+          original_url: url,
+          short_id: nanoid(7),
+        },
+      },
+      {
+        returnOriginal: false,
+        upsert: true,
+      }
+    );
+  };
 
   servidor.get('/user/:id', (requisicao, resposta) => {
     
@@ -49,5 +88,5 @@ var options = {
     });
   })
 
-servidor.listen(9000);
+servidor.listen(8000);
 
