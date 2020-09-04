@@ -7,7 +7,7 @@
   "author": "Paulo Correa <pauloyaco@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "nodemon": "^1.18.9"
+    "nodemon": "^2.0.4"
   },
   "dependencies": {
     "express": "^4.17.1",
