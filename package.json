@@ -7,10 +7,11 @@
   "author": "Paulo Correa <pauloyaco@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "nodemon": "^1.18.9"
   },
   "dependencies": {
     "express": "^4.17.1",
+    "bl": ">=2.2.1",
     "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",
     "swagger-ui-express": "^4.1.3",
