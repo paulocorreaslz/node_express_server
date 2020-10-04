@@ -8,7 +8,10 @@ const { MongoClient } = require('mongodb');
 const databaseUrl = "mongodb://localhost:27017";
 const { exec } = require("child_process");
 
-process.chdir('/home/paulo/projetos/node-projects/node_express_server');
+const ROOT_DIR = process.env.PWD
+console.log(ROOT_DIR);
+
+process.chdir(ROOT_DIR);
 const repositoryVersion = exec("git log --name-status HEAD^..HEAD | head -3", (error, stdout, stderr) => {
     if (error) {
         console.log(`error: ${error.message}`);
