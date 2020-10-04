@@ -6,6 +6,20 @@ const dns = require('dns');
 const { MongoClient } = require('mongodb');
 
 const databaseUrl = "mongodb://localhost:27017";
+const { exec } = require("child_process");
+
+process.chdir('/home/paulo/projetos/node-projects/node_express_server');
+const repositoryVersion = exec("git log --name-status HEAD^..HEAD | head -3", (error, stdout, stderr) => {
+    if (error) {
+        console.log(`error: ${error.message}`);
+        return;
+    }
+    if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+    }
+    console.log(`stdout: ${stdout}`);
+});
 
 var options = {
     explorer: true,
@@ -39,7 +53,7 @@ var options = {
   servidor.get('/', (requisicao, resposta) => {
     return resposta.json({ 
         'data':{
-            'message': 'sucesso'
+            'message': `resultado: ${repositoryVersion}`
         },
         'error': {
             'number': 0}
