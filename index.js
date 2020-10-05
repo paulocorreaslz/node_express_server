@@ -10,9 +10,9 @@ const { exec } = require("child_process");
 
 const ROOT_DIR = process.env.PWD
 console.log(ROOT_DIR);
-
+let repositoryVersion = {}
 process.chdir(ROOT_DIR);
-const repositoryVersion = exec("git log --name-status HEAD^..HEAD | head -3", (error, stdout, stderr) => {
+exec("git log --name-status HEAD^..HEAD | head -3", (error, stdout, stderr) => {
     if (error) {
         console.log(`error: ${error.message}`);
         return;
@@ -22,7 +22,10 @@ const repositoryVersion = exec("git log --name-status HEAD^..HEAD | head -3", (e
         return;
     }
     console.log(`stdout: ${stdout}`);
+    repositoryVersion = `Resultado: ${stdout}`
 });
+
+console.log('version: '+repositoryVersion)
 
 var options = {
     explorer: true,
@@ -40,14 +43,14 @@ var options = {
     }
   }
    
-  MongoClient.connect(databaseUrl, { 
-    useNewUrlParser: true,
-    useUnifiedTopology: true })
-  .then(client => {
-    servidor.locals.db = client.db('dbshorter');
-    console.log("conectado ao mongo.")
-  })
-  .catch(() => console.error('Failed to connect to the database'));
+  // MongoClient.connect(databaseUrl, { 
+  //   useNewUrlParser: true,
+  //   useUnifiedTopology: true })
+  // .then(client => {
+  //   servidor.locals.db = client.db('dbshorter');
+  //   console.log("conectado ao mongo.")
+  // })
+  // .catch(() => console.error('Failed to connect to the database'));
 
   servidor.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null, options));
 
@@ -56,7 +59,7 @@ var options = {
   servidor.get('/', (requisicao, resposta) => {
     return resposta.json({ 
         'data':{
-            'message': `resultado: ${repositoryVersion}`
+            'message': `${repositoryVersion}`
         },
         'error': {
             'number': 0}
@@ -78,21 +81,21 @@ var options = {
     });
   });
 
-  const shortenURL = (db, url) => {
-    const shortenedURLs = db.collection('shortenedURLs');
-    return shortenedURLs.findOneAndUpdate({ original_url: url },
-      {
-        $setOnInsert: {
-          original_url: url,
-          short_id: nanoid(7),
-        },
-      },
-      {
-        returnOriginal: false,
-        upsert: true,
-      }
-    );
-  };
+  // const shortenURL = (db, url) => {
+  //   const shortenedURLs = db.collection('shortenedURLs');
+  //   return shortenedURLs.findOneAndUpdate({ original_url: url },
+  //     {
+  //       $setOnInsert: {
+  //         original_url: url,
+  //         short_id: nanoid(7),
+  //       },
+  //     },
+  //     {
+  //       returnOriginal: false,
+  //       upsert: true,
+  //     }
+  //   );
+  // };
 
   servidor.get('/user/:id', (requisicao, resposta) => {
     
