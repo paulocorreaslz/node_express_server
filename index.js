@@ -21,11 +21,9 @@ exec("git log --name-status HEAD^..HEAD | head -3", (error, stdout, stderr) => {
         console.log(`stderr: ${stderr}`);
         return;
     }
-    console.log(`stdout: ${stdout}`);
     repositoryVersion = `Resultado: ${stdout}`
+    repositoryVersion = stdout
 });
-
-console.log('version: '+repositoryVersion)
 
 var options = {
     explorer: true,
@@ -59,7 +57,7 @@ var options = {
   servidor.get('/', (requisicao, resposta) => {
     return resposta.json({ 
         'data':{
-            'message': `${repositoryVersion}`
+            'message': JSON.stringify(repositoryVersion)
         },
         'error': {
             'number': 0}
